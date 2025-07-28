@@ -1,44 +1,66 @@
-# BIBI AGENT - Sell Alert Bot
-
 import requests
 from web3 import Web3
 import time
 
-# --- הגדרות קבועות ---
+# --- הגדרות ---
+INFURA_URL = 'https://mainnet.infura.io/v3/<YOUR_INFURA_KEY>'
+web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+
+TOKEN_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
+UNISWAP_V3_FACTORY = Web3.to_checksum_address('0x1F98431c8aD98523631AE4a59f267346ea31F984')  # Factory V3
+
+# טלגרם
 TELEGRAM_BOT_TOKEN = '8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4'
 TELEGRAM_CHAT_ID = '@bibicoinradar'
-BIBI_CONTRACT_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
-INFURA_URL = 'https://mainnet.infura.io/v3/0d762f93f5ee42ab8198e2d6ceb9e475'
 
-# --- פונקציה לשליחת הודעה לטלגרם ---
 def send_telegram_message(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    url = f"https://api.telegram.org/bot{8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4}/sendMessage"
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
-    requests.post(url, data=data)
+    response = requests.post(url, data=data)
+    print(response.json())
 
-# --- התחברות לבלוקצ'יין ---
-web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+# התחברות
 if not web3.is_connected():
-    raise Exception("❌ החיבור לבלוקצ'יין נכשל")
+    raise Exception("❌ חיבור ל־Ethereum נכשל")
 
-# --- הודעת התחברות ---
-send_telegram_message("✅ BIBI Bot התחבר בהצלחה! מאזין לעסקאות...")
+send_telegram_message("✅ BIBI Bot התחיל לעקוב אחרי עסקאות Uniswap V3...")
 
-# --- התחלת מעקב ---
-latest_block = web3.eth.block_number
-print(f"📡 מאזין לבלוקים מבלוק {latest_block}")
+# פונקציית בדיקה
+def is_bibi_swap_v3(tx):
+    if tx.to is None:
+        return False
+
+    # כל ה-Poolים של V3 הם חוזים שנוצרים מה־Factory
+    try:
+        tx_receipt = web3.eth.get_transaction_receipt(tx.hash)
+        for log in tx_receipt.logs:
+            if TOKEN_ADDRESS.lower() in log['address'].lower():
+                return True
+    except Exception as e:
+        print("⚠️ שגיאה בקריאת טרנזקציה:", e)
+    return False
+
+# לולאת האזנה
+latest = web3.eth.block_number
 
 while True:
-    current_block = web3.eth.block_number
-    if current_block > latest_block:
-        for block_number in range(latest_block + 1, current_block + 1):
-            block = web3.eth.get_block(block_number, full_transactions=True)
-            for tx in block.transactions:
-                if tx.to and tx.to.lower() == BIBI_CONTRACT_ADDRESS.lower():
-                    value = web3.from_wei(tx.value, 'ether')
-                    sender = tx['from']
-                    msg = f"🚨 כתובת {sender} הרגע מכרה {value:.2f} ETH של $BIBI!"
-                    print(msg)
-                    send_telegram_message(msg)
-        latest_block = current_block
-    time.sleep(10)
+    try:
+        current = web3.eth.block_number
+
+        if current > latest:
+            for block_number in range(latest + 1, current + 1):
+                block = web3.eth.get_block(block_number, full_transactions=True)
+
+                for tx in block.transactions:
+                    if is_bibi_swap_v3(tx):
+                        msg = f"🚨 BIBI Token נרשם בטרנזקציה (Uniswap V3)!\nמאת: {tx['from']}\nBlock: {block_number}"
+                        print(msg)
+                        send_telegram_message(msg)
+
+            latest = current
+
+        time.sleep(10)
+
+    except Exception as e:
+        print("שגיאה:", e)
+        time.sleep(5)
