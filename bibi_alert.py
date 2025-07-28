@@ -3,7 +3,7 @@ from web3 import Web3
 import time
 
 # --- הגדרות ---
-INFURA_URL = 'https://mainnet.infura.io/v3/<YOUR_INFURA_KEY>'
+INFURA_URL = 'https://mainnet.infura.io/v3/0d762f93f5ee42ab8198e2d6ceb9e475'
 web3 = Web3(Web3.HTTPProvider(INFURA_URL))
 
 TOKEN_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
