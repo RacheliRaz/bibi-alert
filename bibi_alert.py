@@ -1,5 +1,4 @@
 # BIBI AGENT - Sell Alert Bot
-# שולח התראה בטלגרם כשמתבצעת מכירה של $BIBI
 
 import requests
 from web3 import Web3
@@ -7,14 +6,9 @@ import time
 
 # --- הגדרות קבועות ---
 TELEGRAM_BOT_TOKEN = '8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4'
-TELEGRAM_CHAT_ID = '@BIBI_COIN_BOT'  # שם הקבוצה או הצ'אנל שלך
+TELEGRAM_CHAT_ID = '@BIBI_COIN_BOT'
 BIBI_CONTRACT_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
 INFURA_URL = 'https://mainnet.infura.io/v3/0d762f93f5ee42ab8198e2d6ceb9e475'
-
-# --- התחברות לבלוקצ'יין ---
-web3 = Web3(Web3.HTTPProvider(INFURA_URL))
-if not web3.is_connected():
-    raise Exception("❌ החיבור לבלוקצ'יין נכשל")
 
 # --- פונקציה לשליחת הודעה לטלגרם ---
 def send_telegram_message(message):
@@ -22,10 +16,15 @@ def send_telegram_message(message):
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
     requests.post(url, data=data)
 
+# --- התחברות לבלוקצ'יין ---
+web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+if not web3.is_connected():
+    raise Exception("❌ החיבור לבלוקצ'יין נכשל")
+
 # --- הודעת התחברות ---
 send_telegram_message("✅ BIBI Bot התחבר בהצלחה! מאזין לעסקאות...")
 
-# --- תחילת האזנה לבלוקים חדשים ---
+# --- התחלת מעקב ---
 latest_block = web3.eth.block_number
 print(f"📡 מאזין לבלוקים מבלוק {latest_block}")
 
