@@ -6,7 +6,7 @@ import time
 
 # --- הגדרות קבועות ---
 TELEGRAM_BOT_TOKEN = '8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4'
-TELEGRAM_CHAT_ID = '@BIBI_COIN_BOT'
+TELEGRAM_CHAT_ID = '@bibicoinradar'
 BIBI_CONTRACT_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
 INFURA_URL = 'https://mainnet.infura.io/v3/0d762f93f5ee42ab8198e2d6ceb9e475'
 
