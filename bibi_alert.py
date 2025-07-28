@@ -14,7 +14,7 @@ TELEGRAM_BOT_TOKEN = '8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4'
 TELEGRAM_CHAT_ID = '@bibicoinradar'
 
 def send_telegram_message(message):
-    url = f"https://api.telegram.org/bot{8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4}/sendMessage"
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
     response = requests.post(url, data=data)
     print(response.json())
