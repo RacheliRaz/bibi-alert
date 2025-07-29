@@ -3,11 +3,13 @@ from web3 import Web3
 import time
 
 # --- הגדרות ---
-ALCHEMY_URL = 'https://eth-mainnet.g.alchemy.com/v2/הכניסי-כאן-את-ה-API-KEY-שלך'
+ALCHEMY_API_KEY = 'zq_ZbyEWvCD5sCMzN_MsL' https://eth-mainnet.g.alchemy.com/v2/zq_ZbyEWvCD5sCMzN_MsL
+ALCHEMY_URL = f'https://eth-mainnet.g.alchemy.com/v2/{ALCHEMY_API_KEY}'
+
 web3 = Web3(Web3.HTTPProvider(ALCHEMY_URL))
 
 TOKEN_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
-UNISWAP_V3_FACTORY = Web3.to_checksum_address('0x1F98431c8aD98523631AE4a59f267346ea31F984')  # Factory V3
+UNISWAP_V3_FACTORY = Web3.to_checksum_address('0x1F98431c8aD98523631AE4a59f267346ea31F984')
 
 # טלגרם
 TELEGRAM_BOT_TOKEN = '8425080568:AAEBS05iTDNkp6TzGgJ-QJp156dzMpVdMB4'
@@ -25,7 +27,6 @@ if not web3.is_connected():
 
 send_telegram_message("✅ BIBI Bot התחיל לעקוב אחרי עסקאות Uniswap V3...")
 
-# פונקציית בדיקה
 def is_bibi_swap_v3(tx):
     if tx.to is None:
         return False
@@ -39,7 +40,6 @@ def is_bibi_swap_v3(tx):
         print("⚠️ שגיאה בקריאת טרנזקציה:", e)
     return False
 
-# לולאת האזנה
 latest = web3.eth.block_number
 
 while True:
