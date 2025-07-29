@@ -1,11 +1,16 @@
 import requests
+from alchemy import Alchemy, Network
 from web3 import Web3
 import time
 
-# --- הגדרות ---
-INFURA_URL = 'https://mainnet.infura.io/v3/0d762f93f5ee42ab8198e2d6ceb9e475'
-web3 = Web3(Web3.HTTPProvider(INFURA_URL))
+# --- חיבור ל־Alchemy במקום INFURA ---
+alchemy = Alchemy(
+    api_key="zq_ZbyEWvCD5sCMzN_MsL",  # מפתח Alchemy שלך
+    network=Network.ETH_MAINNET
+)
+web3 = alchemy.web3
 
+# --- הגדרות ---
 TOKEN_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
 UNISWAP_V3_FACTORY = Web3.to_checksum_address('0x1F98431c8aD98523631AE4a59f267346ea31F984')  # Factory V3
 
@@ -30,7 +35,6 @@ def is_bibi_swap_v3(tx):
     if tx.to is None:
         return False
 
-    # כל ה-Poolים של V3 הם חוזים שנוצרים מה־Factory
     try:
         tx_receipt = web3.eth.get_transaction_receipt(tx.hash)
         for log in tx_receipt.logs:
