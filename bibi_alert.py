@@ -1,16 +1,11 @@
 import requests
-from alchemy import Alchemy, Network
 from web3 import Web3
 import time
 
-# --- חיבור ל־Alchemy במקום INFURA ---
-alchemy = Alchemy(
-    api_key="zq_ZbyEWvCD5sCMzN_MsL",  # מפתח Alchemy שלך
-    network=Network.ETH_MAINNET
-)
-web3 = alchemy.web3
-
 # --- הגדרות ---
+ALCHEMY_URL = 'https://eth-mainnet.g.alchemy.com/v2/הכניסי-כאן-את-ה-API-KEY-שלך'
+web3 = Web3(Web3.HTTPProvider(ALCHEMY_URL))
+
 TOKEN_ADDRESS = Web3.to_checksum_address('0xfA21cc13462fD156a2d11EB7b5c4812154C6f485')
 UNISWAP_V3_FACTORY = Web3.to_checksum_address('0x1F98431c8aD98523631AE4a59f267346ea31F984')  # Factory V3
 
