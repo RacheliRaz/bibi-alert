@@ -3,7 +3,7 @@ from web3 import Web3
 import time
 
 # --- הגדרות ---
-ALCHEMY_API_KEY = 'zq_ZbyEWvCD5sCMzN_MsL' https://eth-mainnet.g.alchemy.com/v2/zq_ZbyEWvCD5sCMzN_MsL
+ALCHEMY_API_KEY = 'zq_ZbyEWvCD5sCMzN_MsL'  # https://eth-mainnet.g.alchemy.com/v2/zq_ZbyEWvCD5sCMzN_MsL
 ALCHEMY_URL = f'https://eth-mainnet.g.alchemy.com/v2/{ALCHEMY_API_KEY}'
 
 web3 = Web3(Web3.HTTPProvider(ALCHEMY_URL))
