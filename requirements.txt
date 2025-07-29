@@ -1,3 +1,4 @@
 alchemy-sdk
 web3
 requests
+dataclass-wizard
